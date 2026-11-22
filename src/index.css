@@ -1,0 +1,99 @@
+/* فونت وزیرمتن — نسخه متغیر (همه وزن‌ها از ۱۰۰ تا ۹۰۰ در یک فایل).
+   در React خالص فونت را با @font-face معرفی می‌کنیم
+   (در Next.js کار next/font/local این را خودکار می‌کرد) */
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Variable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ═══════════════════════════════════════════════════════════
+   پالت برند فرتاک — سبز جنگلی + طلایی
+   این مقادیر توسط Tailwind به کلاس‌هایی مثل bg-forest-800 یا
+   text-gold-500 تبدیل می‌شوند؛ تغییر برند فقط از همین‌جا
+   ═══════════════════════════════════════════════════════════ */
+@theme {
+  /* سبز جنگلی — از خیلی روشن تا خیلی تیره */
+  --color-forest-50: #f1f8f4;
+  --color-forest-100: #e2f0e8;
+  --color-forest-200: #c3dfd1;
+  --color-forest-300: #8fbfa6;
+  --color-forest-400: #5fa382;
+  --color-forest-500: #3c8763;
+  --color-forest-600: #2e7052;
+  --color-forest-700: #245c44;
+  --color-forest-800: #1b4a36; /* ← سبز اصلی کارت‌ها و دکمه‌ها */
+  --color-forest-900: #143828;
+  --color-forest-950: #0e2a1f;
+
+  /* طلایی — لوگو و بج‌های وضعیت مثل «مرحله ۱ از ۴» */
+  --color-gold-50: #fdf8ec;
+  --color-gold-100: #faf1dc;
+  --color-gold-400: #e5b858;
+  --color-gold-500: #d9a63f;
+  --color-gold-600: #c18f2f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, monospace;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* شعاع گردی گوشه‌ها — طرح طراح کارت‌های خیلی گرد دارد */
+  --radius: 1rem;
+  --background: #ffffff;
+  --foreground: #1c2620;
+  --card: #ffffff;
+  --card-foreground: #1c2620;
+  --popover: #ffffff;
+  --popover-foreground: #1c2620;
+  --primary: #1b4a36;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f8f4;
+  --secondary-foreground: #1b4a36;
+  --muted: #f4f6f5;
+  --muted-foreground: #6c7a72;
+  --accent: #e2f0e8;
+  --accent-foreground: #143828;
+  --destructive: #c6453d;
+  --border: #e8ecea;
+  --input: #e8ecea;
+  --ring: #3c8763;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
