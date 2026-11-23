@@ -18,7 +18,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
           روی موبایل واقعی تمام‌صفحه می‌شود */}
       <div
         className="
-          w-full max-w-[400px] bg-white
+          relative w-full max-w-[400px] bg-white
           h-dvh sm:h-[860px]
           sm:rounded-[2.5rem]
           sm:shadow-[0_25px_60px_-15px_rgba(20,56,40,0.35)]

@@ -5,13 +5,17 @@ import { Bell, Menu, Sprout } from "lucide-react";
 
    مطابق طرح طراح:
    - سمت راست: لوگوی فرتاک (آیکون جوانه طلایی + نوشته سبز تیره)
-   - سمت چپ: دکمه اعلان‌ها و دکمه منو (منو در گام ۴ به کشوی کناری
-     وصل می‌شود؛ فعلاً فقط ظاهر دارند)
+   - سمت چپ: دکمه اعلان‌ها و دکمه منو (از گام ۴ دکمه منو به
+     کشوی کناری وصل شده است)
 
    نکته آموزشی: چون صفحه RTL است، اولین المانِ داخل flex
    به سمتِ راست می‌رود؛ برای همین لوگو را اول نوشته‌ایم.
    ──────────────────────────────────────────────────────────────── */
-export default function AppHeader() {
+type AppHeaderProps = {
+  onMenuClick: () => void; // هدر خودش نمی‌داند منو چیست؛ فقط خبر می‌دهد
+};
+
+export default function AppHeader({ onMenuClick }: AppHeaderProps) {
   return (
     <header className="h-14 shrink-0 flex items-center justify-between px-3 bg-white border-b border-border">
       {/* لوگو */}
@@ -33,6 +37,7 @@ export default function AppHeader() {
         </button>
         <button
           type="button"
+          onClick={onMenuClick}
           aria-label="منو"
           className="h-10 w-10 grid place-items-center rounded-full text-foreground/70 hover:bg-forest-50 hover:text-forest-800 transition-colors"
         >

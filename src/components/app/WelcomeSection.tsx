@@ -15,8 +15,17 @@ import { ArrowLeft, Sprout } from "lucide-react";
 
    نکته RTL: در justify-between اولین المانِ DOM می‌رود سمت راست؛
    برای همین «شروع همکاری...» را اول نوشته‌ایم.
+
+   گام ۵: دکمهٔ «تکمیل فرم درخواست» واقعی شد — با کلیک روی آن،
+   App صفحهٔ فرم را نشان می‌دهد. خود این کامپوننت نمی‌داند «صفحه»
+   چیست؛ فقط با صدا زدن onNewRequest خبر می‌دهد.
    ──────────────────────────────────────────────────────────────── */
-export default function WelcomeSection() {
+
+type WelcomeSectionProps = {
+  onNewRequest: () => void; // کلیک روی دکمهٔ سفید کارت
+};
+
+export default function WelcomeSection({ onNewRequest }: WelcomeSectionProps) {
   return (
     <section className="px-4 pt-2">
       {/* سطر بالا: متن کوچک + بج سطح */}
@@ -62,9 +71,11 @@ export default function WelcomeSection() {
           خدمات را مشخص کنید.
         </p>
 
-        {/* دکمه سفید تمام‌عرض — در RTL «جهت جلو» سمت چپ است */}
+        {/* دکمه سفید تمام‌عرض — در RTL «جهت جلو» سمت چپ است
+            گام ۵: با کلیک، App صفحهٔ فرم درخواست را باز می‌کند */}
         <button
           type="button"
+          onClick={onNewRequest}
           className="
             mt-5 h-12 w-full flex items-center justify-center gap-2
             rounded-2xl bg-white text-base font-bold text-forest-900

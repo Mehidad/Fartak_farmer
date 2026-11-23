@@ -1,67 +1,70 @@
+import { useState } from "react";
 import AppShell from "@/components/app/AppShell";
 import AppHeader from "@/components/app/AppHeader";
 import WelcomeSection from "@/components/app/WelcomeSection";
-import { Sprout } from "lucide-react";
+import DrawerMenu from "@/components/home/DrawerMenu";
+import StageChecklist from "@/components/home/StageChecklist";
+import QuickActions from "@/components/home/QuickActions";
+import RequestFormPage from "@/components/request/RequestFormPage";
 
 /* ────────────────────────────────────────────────────────────────
-   صفحه اصلی داشبورد کشاورز — گام ۲
+   App — گام ۵ (+ جابه‌جایی بین صفحه‌ها)
 
-   ├─ هدر                                        ← آماده (گام ۱)
-   ├─ بخش خوش‌آمد + کارت سبز تیره فرتاک          ← واقعی (گام ۲)
-   ├─ چک‌لیست «برای تکمیل این مرحله»             ← اسکلت (گام ۳)
-   └─ سه کارت: درخواست جدید / جدول مالی / راهنما  ← اسکلت (گام ۳)
+   مفهوم تازه: نمایش شرطیِ صفحه‌ها (conditional rendering)
+
+   page دو مقدار می‌تواند داشته باشد:
+   - "home"          ← داشبورد (همان صفحهٔ قبلی)
+   - "request-form"  ← فرم درخواست تولید (جدید)
+
+   هدر اپ و منوی کشویی «مشترک» هر دو صفحه‌اند، پس بیرون از
+   ternary رسم می‌شوند — دقیقاً مثل عکس طراح که بالای فرم هم
+   همان نوار لوگو و آیکون‌ها هست. فقط «محتوای وسط» عوض می‌شود.
+
+   دکمه‌های فرزند نمی‌دانند «صفحه» چیست؛ فقط خبر می‌دهند:
+   - WelcomeSection و QuickActions می‌گویند: «فرم را باز کن»
+   - RequestFormPage می‌گوید: «برگرد خانه»
+   تصمیم و اجرا همه در App است — همان الگوی «بردن state بالا».
    ──────────────────────────────────────────────────────────────── */
+
+/* اسم صفحه‌ها یک‌جا این‌جا تعریف شده تا غلط تایپی ممکن نباشد */
+type PageName = "home" | "request-form";
+
 export default function App() {
+  /* state منوی کشویی (برای هر دو صفحه مشترک است) */
+  const [menuOpen, setMenuOpen] = useState(false);
+  /* کدام صفحه دیده شود؟ پیش‌فرض: خانه */
+  const [page, setPage] = useState<PageName>("home");
+
+  /* این تابع را به همهٔ دکمه‌هایی می‌دهیم که فرم درخواست را باز می‌کنند */
+  const openRequestForm = () => {
+    setMenuOpen(false); // اگر منو باز بود، ببند
+    setPage("request-form");
+  };
+
   return (
     <AppShell>
-      <AppHeader />
+      {/* هدر مشترک: لوگو راست + اعلان و منو چپ */}
+      <AppHeader onMenuClick={() => setMenuOpen(true)} />
 
-      {/* محتوای قابل اسکرول داخل قاب گوشی */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="flex flex-col gap-4 pb-6">
-          {/* گام ۲: بخش خوش‌آمد — واقعی */}
-          <WelcomeSection />
-
-          {/* کادر وضعیت ساخت — بعد از گام ۳ حذف می‌شود */}
-          <div className="mx-4 border-2 border-dashed border-forest-200 rounded-2xl p-5 text-center">
-            <Sprout size={32} className="mx-auto text-forest-300" />
-            <p className="mt-2 text-sm font-bold text-forest-800">
-              گام ۲ تمام شد: بخش خوش‌آمد واقعی شد
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground leading-6">
-              چک‌لیست «برای تکمیل این مرحله» و سه کارت پایین صفحه هنوز
-              اسکلت هستند — در گام ۳ واقعی می‌شوند.
-            </p>
+      {page === "home" ? (
+        /* ─── صفحهٔ خانه ─── */
+        <main className="flex-1 overflow-y-auto">
+          <div className="flex flex-col gap-4 pb-6">
+            <WelcomeSection onNewRequest={openRequestForm} />
+            <StageChecklist />
+            <QuickActions onNewRequest={openRequestForm} />
           </div>
+        </main>
+      ) : (
+        /* ─── صفحهٔ فرم درخواست ─── */
+        <RequestFormPage
+          onBack={() => setPage("home")}
+          onSubmitted={() => setPage("home")}
+        />
+      )}
 
-          {/* اسکلت چک‌لیست (جای‌گزار گام ۳) */}
-          <div className="mx-4 rounded-2xl border border-border bg-white p-5 flex flex-col gap-4">
-            <div className="h-4 w-40 rounded-full bg-forest-100" />
-            {[1, 2, 3, 4].map((row) => (
-              <div key={row} className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded-full bg-forest-100" />
-                <div className="h-3 flex-1 rounded-full bg-muted" />
-              </div>
-            ))}
-          </div>
-
-          {/* اسکلت سه کارت پایین (جای‌گزار گام ۳) */}
-          <div className="mx-4 flex flex-col gap-3">
-            {[1, 2, 3].map((card) => (
-              <div
-                key={card}
-                className="rounded-2xl border border-border bg-white p-4 flex items-center justify-between"
-              >
-                <div className="flex flex-col gap-2">
-                  <div className="h-3.5 w-28 rounded-full bg-forest-100" />
-                  <div className="h-2.5 w-44 rounded-full bg-muted" />
-                </div>
-                <div className="h-10 w-10 rounded-xl bg-forest-50" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
+      {/* منوی کشویی مشترک؛ همیشه در صفحه است، فقط با open جابه‌جا می‌شود */}
+      <DrawerMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
     </AppShell>
   );
 }
