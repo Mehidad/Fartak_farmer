@@ -6,39 +6,54 @@ import DrawerMenu from "@/components/home/DrawerMenu";
 import StageChecklist from "@/components/home/StageChecklist";
 import QuickActions from "@/components/home/QuickActions";
 import RequestFormPage from "@/components/request/RequestFormPage";
+import VisitSchedulePage from "@/components/visit/VisitSchedulePage";
 
 /* ────────────────────────────────────────────────────────────────
-   App — گام ۵ (+ جابه‌جایی بین صفحه‌ها)
+   App — گام ۶ (+ صفحهٔ سوم: زمان‌بندی بازدید مزرعه)
 
-   مفهوم تازه: نمایش شرطیِ صفحه‌ها (conditional rendering)
+   page سه مقدار می‌تواند داشته باشد:
+   - "home"           ← داشبورد
+   - "request-form"   ← فرم درخواست تولید (گام ۵)
+   - "visit-schedule" ← زمان‌بندی بازدید مزرعه (گام ۶ — جدید)
 
-   page دو مقدار می‌تواند داشته باشد:
-   - "home"          ← داشبورد (همان صفحهٔ قبلی)
-   - "request-form"  ← فرم درخواست تولید (جدید)
+   چرخهٔ درخواست حالا کامل دیده می‌شود:
+   ثبت فرم ← به‌جای برگشتن به خانه، مستقیم می‌رویم صفحهٔ
+   زمان‌بندی بازدید (کارشناس وقت پیشنهادی داده) تا کاربر تاییدش
+   کند و بعد برگردد خانه.
 
-   هدر اپ و منوی کشویی «مشترک» هر دو صفحه‌اند، پس بیرون از
-   ternary رسم می‌شوند — دقیقاً مثل عکس طراح که بالای فرم هم
-   همان نوار لوگو و آیکون‌ها هست. فقط «محتوای وسط» عوض می‌شود.
-
-   دکمه‌های فرزند نمی‌دانند «صفحه» چیست؛ فقط خبر می‌دهند:
-   - WelcomeSection و QuickActions می‌گویند: «فرم را باز کن»
-   - RequestFormPage می‌گوید: «برگرد خانه»
-   تصمیم و اجرا همه در App است — همان الگوی «بردن state بالا».
+   چون دیگر سه صفحه داریم، به‌جای یک ternary از دو تا استفاده
+   شده: اول چک می‌کنیم «home هست؟»، بعد «request-form هست؟»،
+   وگرنه یعنی visit-schedule.
    ──────────────────────────────────────────────────────────────── */
 
 /* اسم صفحه‌ها یک‌جا این‌جا تعریف شده تا غلط تایپی ممکن نباشد */
-type PageName = "home" | "request-form";
+type PageName = "home" | "request-form" | "visit-schedule";
 
 export default function App() {
-  /* state منوی کشویی (برای هر دو صفحه مشترک است) */
+  /* state منوی کشویی (برای همهٔ صفحه‌ها مشترک است) */
   const [menuOpen, setMenuOpen] = useState(false);
   /* کدام صفحه دیده شود؟ پیش‌فرض: خانه */
   const [page, setPage] = useState<PageName>("home");
 
-  /* این تابع را به همهٔ دکمه‌هایی می‌دهیم که فرم درخواست را باز می‌کنند */
+  /* این تابع را به دکمه‌هایی می‌دهیم که فرم درخواست را باز می‌کنند */
   const openRequestForm = () => {
     setMenuOpen(false); // اگر منو باز بود، ببند
     setPage("request-form");
+  };
+
+  /* گام ۶: باز کردن صفحهٔ زمان‌بندی بازدید (از منو و بعد از ثبت فرم) */
+  const openVisitSchedule = () => {
+    setMenuOpen(false);
+    setPage("visit-schedule");
+  };
+
+  /* کلیک روی آیتم‌های منو؛ فعلاً فقط «درخواست‌ها» صفحه دارد */
+  const handleMenuSelect = (title: string) => {
+    if (title === "درخواست‌ها") {
+      openVisitSchedule();
+    } else {
+      setMenuOpen(false);
+    }
   };
 
   return (
@@ -55,16 +70,24 @@ export default function App() {
             <QuickActions onNewRequest={openRequestForm} />
           </div>
         </main>
-      ) : (
-        /* ─── صفحهٔ فرم درخواست ─── */
+      ) : page === "request-form" ? (
+        /* ─── صفحهٔ فرم درخواست تولید ───
+            بعد از ثبت موفق: مستقیم به زمان‌بندی بازدید (گام ۶) */
         <RequestFormPage
           onBack={() => setPage("home")}
-          onSubmitted={() => setPage("home")}
+          onSubmitted={openVisitSchedule}
         />
+      ) : (
+        /* ─── صفحهٔ زمان‌بندی بازدید مزرعه ─── */
+        <VisitSchedulePage onConfirmed={() => setPage("home")} />
       )}
 
       {/* منوی کشویی مشترک؛ همیشه در صفحه است، فقط با open جابه‌جا می‌شود */}
-      <DrawerMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <DrawerMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onSelectItem={handleMenuSelect}
+      />
     </AppShell>
   );
 }
