@@ -191,25 +191,11 @@ export const visitChecks = [
 ];
 
 /* کارت نقشه مزرعه (فعلاً placeholder؛ بعداً نقشهٔ واقعی) */
-export type LatLng = { lat: number; lng: number };
-
-export const farmLandPolygon: LatLng[] = [
-  { lat: 32.7071, lng: 51.0384 },
-  { lat: 32.7121, lng: 51.0451 },
-  { lat: 32.7087, lng: 51.0526 },
-  { lat: 32.7032, lng: 51.0471 },
-  { lat: 32.7048, lng: 51.0397 },
-];
-
-/* مرکز پولیگون = میانگینِ سادهٔ عرض و طول همهٔ نقاط */
-export const farmLandCenter: LatLng = {
-  lat:
-    farmLandPolygon.reduce((sum, p) => sum + p.lat, 0) /
-    farmLandPolygon.length,
-  lng:
-    farmLandPolygon.reduce((sum, p) => sum + p.lng, 0) /
-    farmLandPolygon.length,
+export const farmLocation = {
+  title: "موقعیت دقیق مزرعه",
+  updated: "به‌روزشده: پنجشنبه، ۵ آذر",
 };
+
 /* نکات قبل از بازدید */
 export const visitNotes = {
   title: "نکات قبل از بازدید",
