@@ -7,6 +7,7 @@ import StageChecklist from "@/components/home/StageChecklist";
 import QuickActions from "@/components/home/QuickActions";
 import RequestFormPage from "@/components/request/RequestFormPage";
 import VisitSchedulePage from "@/components/visit/VisitSchedulePage";
+import CooperationPage from "@/components/coop/CooperationPage";
 
 /* ────────────────────────────────────────────────────────────────
    App — گام ۶ (+ صفحهٔ سوم: زمان‌بندی بازدید مزرعه)
@@ -27,7 +28,7 @@ import VisitSchedulePage from "@/components/visit/VisitSchedulePage";
    ──────────────────────────────────────────────────────────────── */
 
 /* اسم صفحه‌ها یک‌جا این‌جا تعریف شده تا غلط تایپی ممکن نباشد */
-type PageName = "home" | "request-form" | "visit-schedule";
+type PageName = "home" | "request-form" | "visit-schedule" | "cooperation";
 
 export default function App() {
   /* state منوی کشویی (برای همهٔ صفحه‌ها مشترک است) */
@@ -77,9 +78,15 @@ export default function App() {
           onBack={() => setPage("home")}
           onSubmitted={openVisitSchedule}
         />
+      ) : page === "visit-schedule" ? (
+        /* ─── صفحهٔ زمان‌بندی بازدید مزرعه ───
+            بعد از تایید زمان: به‌جای برگشتن به خانه، می‌رویم
+            صفحهٔ «تکمیل شرایط همکاری» (گام ۷) */
+        <VisitSchedulePage onConfirmed={() => setPage("cooperation")} />
       ) : (
-        /* ─── صفحهٔ زمان‌بندی بازدید مزرعه ─── */
-        <VisitSchedulePage onConfirmed={() => setPage("home")} />
+        /* ─── صفحهٔ تکمیل شرایط همکاری ───
+            دکمهٔ «مشاهدهٔ درخواست» برمی‌گرداند به صفحهٔ بازدید */
+        <CooperationPage onViewRequest={() => setPage("visit-schedule")} />
       )}
 
       {/* منوی کشویی مشترک؛ همیشه در صفحه است، فقط با open جابه‌جا می‌شود */}
