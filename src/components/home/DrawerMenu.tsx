@@ -19,9 +19,14 @@ import { appVersion, menuItems, supportPromo } from "@/data/mock";
 type DrawerMenuProps = {
   open: boolean; // باز است یا بسته؟
   onClose: () => void; // هر جای منو خواستیم ببندیم، این را صدا می‌زنیم
+  onSelectItem?: (title: string) => void; // اختیاری: کلیک روی هر آیتم را به App خبر می‌دهد
 };
 
-export default function DrawerMenu({ open, onClose }: DrawerMenuProps) {
+export default function DrawerMenu({
+  open,
+  onClose,
+  onSelectItem,
+}: DrawerMenuProps) {
   return (
     <>
       {/* پرده تیره پشت منو؛ کلیک روی آن یعنی «ببند» */}
@@ -68,7 +73,8 @@ export default function DrawerMenu({ open, onClose }: DrawerMenuProps) {
             <button
               key={item.title}
               type="button"
-              onClick={onClose} /* فعلاً: کلیک = بستن منو؛ در گام روتر به صفحه می‌رود */
+              onClick={() => onSelectItem?.(item.title)}
+              /* با «?.» می‌گوییم: اگر App تابعی نداده بود، فقط onClose اجرا شود */
               className={
                 "flex items-center gap-3 rounded-2xl px-3.5 py-3 text-right transition-colors " +
                 (item.active ? "bg-forest-100" : "hover:bg-muted")
