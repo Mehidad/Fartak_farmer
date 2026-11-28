@@ -3,7 +3,7 @@ import { CalendarDays, Check,  Phone } from "lucide-react";
 import FarmMap from "@/components/visit/FarmMap";
 import {
   appVersion,
-  farmLandPolygon,
+  farmLocation,
   proposedVisit,
   visitChecks,
   visitExpert,
@@ -208,24 +208,18 @@ export default function VisitSchedulePage({
 
         {/* ─── ۵) کارت نقشه و نکات ─── */}
         <section className="mt-4 rounded-3xl border border-border bg-white p-4 shadow-sm">
-          {/* ناحیهٔ نقشه فعلاً placeholder است؛ کلیک روی آن پیام دمو */}
-          <button
-            type="button"
-            onClick={() =>
-              alert("نمایش روی نقشه در گام‌های بعدی اضافه می‌شود (نسخهٔ دمو).")
-            }
-            className="flex h-64 w-full flex-col items-center justify-center gap-2 rounded-2xl bg-forest-50 transition-colors hover:bg-forest-100/60"
-          >
-            <div className="mt-3 flex items-center justify-between">
+         {/* نقشهٔ واقعی زمین: چندضلعی سبز + پینِ مرکز زمین */}
+          <FarmMap />
+
+          {/* عنوان و زمان به‌روزرسانی، زیر نقشه */}
+          <div className="mt-3 flex items-center justify-between">
             <span className="text-sm font-extrabold text-forest-950">
-              {farmLandPolygon.title}
+              {farmLocation.title}
             </span>
             <span className="text-[11px] text-muted-foreground">
-              {farmLandPolygon.updated}
+              {farmLocation.updated}
             </span>
           </div>
-          </button>
-
           <h4 className="mt-4 text-sm font-extrabold text-forest-950">
             {visitNotes.title}
           </h4>
